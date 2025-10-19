@@ -30,11 +30,6 @@ export async function GET() {
       email: userData.email,
       name: userData.name,
       role: userData.role,
-      phone: userData.phone || '',
-      bio: userData.bio || '',
-      location: userData.location || '',
-      website: userData.website || '',
-      dateOfBirth: userData.dateOfBirth || '',
       createdAt: userData.createdAt,
       updatedAt: userData.updatedAt
     });
@@ -53,16 +48,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const {
-      firstName,
-      lastName,
-      email,
-      phone,
-      bio,
-      location,
-      website,
-      dateOfBirth
-    } = body;
+    const { firstName, lastName, email } = body;
 
     // Validate required fields
     if (!firstName?.trim() || !lastName?.trim() || !email?.trim()) {
@@ -87,17 +73,12 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Email is already taken' }, { status: 400 });
     }
 
-    // Update user profile
+    // Update user profile - update name and email fields
     const updatedUsers = await db
       .update(users)
       .set({
         name: `${firstName.trim()} ${lastName.trim()}`,
         email: email.trim(),
-        phone: phone?.trim() || null,
-        bio: bio?.trim() || null,
-        location: location?.trim() || null,
-        website: website?.trim() || null,
-        dateOfBirth: dateOfBirth || null,
         updatedAt: new Date()
       })
       .where(eq(users.id, session.user.id))
@@ -114,11 +95,6 @@ export async function PUT(request: NextRequest) {
       email: updatedUser.email,
       name: updatedUser.name,
       role: updatedUser.role,
-      phone: updatedUser.phone || '',
-      bio: updatedUser.bio || '',
-      location: updatedUser.location || '',
-      website: updatedUser.website || '',
-      dateOfBirth: updatedUser.dateOfBirth || '',
       updatedAt: updatedUser.updatedAt
     });
   } catch (error) {

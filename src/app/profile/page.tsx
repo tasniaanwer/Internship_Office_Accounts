@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { User, CheckCircle, Camera, Mail, Phone, MapPin, Calendar } from 'lucide-react';
+import { User, CheckCircle, Camera, Mail } from 'lucide-react';
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -16,16 +16,11 @@ export default function ProfilePage() {
   const [saveMessage, setSaveMessage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Profile state
+  // Profile state - essential working fields including email
   const [profile, setProfile] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    phone: '',
-    bio: '',
-    location: '',
-    website: '',
-    dateOfBirth: '',
     role: ''
   });
 
@@ -55,11 +50,6 @@ export default function ProfilePage() {
           firstName,
           lastName,
           email: data.email || '',
-          phone: data.phone || '',
-          bio: data.bio || '',
-          location: data.location || '',
-          website: data.website || '',
-          dateOfBirth: data.dateOfBirth || '',
           role: data.role || 'user'
         });
       }
@@ -71,11 +61,6 @@ export default function ProfilePage() {
           firstName: session.user.name?.split(' ')[0] || '',
           lastName: session.user.name?.split(' ')[1] || '',
           email: session.user.email || '',
-          phone: '',
-          bio: '',
-          location: '',
-          website: '',
-          dateOfBirth: '',
           role: session.user.role || 'user'
         });
       }
@@ -115,12 +100,19 @@ export default function ProfilePage() {
     setSaveMessage('');
 
     try {
+      // Send the working fields including email
+      const profileData = {
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        email: profile.email
+      };
+
       const response = await fetch('/api/users/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(profile),
+        body: JSON.stringify(profileData),
       });
 
       const data = await response.json();
@@ -224,24 +216,10 @@ export default function ProfilePage() {
                 <Mail className="h-4 w-4" />
                 <span>{profile.email}</span>
               </div>
-              {profile.phone && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Phone className="h-4 w-4" />
-                  <span>{profile.phone}</span>
-                </div>
-              )}
-              {profile.location && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="h-4 w-4" />
-                  <span>{profile.location}</span>
-                </div>
-              )}
-              {profile.dateOfBirth && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
-                  <span>{new Date(profile.dateOfBirth).toLocaleDateString()}</span>
-                </div>
-              )}
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <User className="h-4 w-4" />
+                <span>Role: {profile.role}</span>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -290,58 +268,6 @@ export default function ProfilePage() {
                   className={errors.email ? 'border-red-500' : ''}
                 />
                 {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    value={profile.phone}
-                    onChange={(e) => setProfile({...profile, phone: e.target.value})}
-                    placeholder="+1 (555) 123-4567"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="dateOfBirth">Date of Birth</Label>
-                  <Input
-                    id="dateOfBirth"
-                    type="date"
-                    value={profile.dateOfBirth}
-                    onChange={(e) => setProfile({...profile, dateOfBirth: e.target.value})}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  value={profile.location}
-                  onChange={(e) => setProfile({...profile, location: e.target.value})}
-                  placeholder="New York, NY"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="website">Website</Label>
-                <Input
-                  id="website"
-                  value={profile.website}
-                  onChange={(e) => setProfile({...profile, website: e.target.value})}
-                  placeholder="https://yourwebsite.com"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="bio">Bio</Label>
-                <textarea
-                  id="bio"
-                  className="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  value={profile.bio}
-                  onChange={(e) => setProfile({...profile, bio: e.target.value})}
-                  placeholder="Tell us about yourself..."
-                />
               </div>
 
               <Button onClick={handleSaveProfile} disabled={isLoading}>
