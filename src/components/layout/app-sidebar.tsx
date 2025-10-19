@@ -1,6 +1,5 @@
 "use client"
 
-import { NavProjects } from '@/components/layout/nav-projects'
 import { NavMain } from '@/components/layout/nav-main'
 import { NavUserAuth } from '@/components/layout/nav-user-auth'
 import { SidebarProvider, SidebarInset, Sidebar, SidebarTrigger, SidebarHeader } from '@/components/ui/sidebar'
@@ -28,7 +27,6 @@ export function AppSidebar({ children }: { children: React.ReactNode }) {
         </SidebarHeader>
         <Separator />
         <NavMain items={NAVIGATION_ITEMS} />
-        <NavProjects />
         <NavUserAuth />
       </Sidebar>
       <SidebarInset>

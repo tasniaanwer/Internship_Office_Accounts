@@ -50,13 +50,7 @@ export const NAVIGATION_ITEMS: Array<{
     icon: 'receipt',
     description: 'Record and manage transactions',
   },
-  {
-    title: 'Projects',
-    href: '/projects',
-    icon: 'folder',
-    description: 'Manage accounting projects and initiatives',
-  },
-  {
+    {
     title: 'Reports',
     href: '/reports',
     icon: 'file-text',

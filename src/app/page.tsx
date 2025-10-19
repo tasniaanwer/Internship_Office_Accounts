@@ -255,13 +255,7 @@ export default function Dashboard() {
                 Generate Reports
               </Link>
             </Button>
-            <Button asChild className="w-full justify-start" variant="outline">
-              <Link href="/analytics">
-                <PieChart className="mr-2 h-4 w-4" />
-                View Analytics
-              </Link>
-            </Button>
-            <Separator />
+                        <Separator />
             <div className="text-sm text-muted-foreground">
               <p>Fiscal Year 2024</p>
               <p className="font-medium text-foreground">Q4 in Progress</p>
